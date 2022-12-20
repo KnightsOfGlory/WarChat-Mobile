@@ -1,38 +1,75 @@
 import { References } from "@knightsofglory/warlibrary/lib/References";
 import { Messages } from "@knightsofglory/warlibrary/lib/common/Messages";
-import { Profile } from "@knightsofglory/warlibrary/lib/state/ProfileManager";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+export type Profile = {
+    server: string,
+    username: string,
+    password: string,
+    home: string,
+    init6: boolean
+}
 
 export namespace ProfileManager {
 
-  export function initialize() {
-    listen()
-    push()
-  }
+    const empty = {
+        server: "",
+        username: "",
+        password: "",
+        home: "",
+        init6: true
+    }
+    const key = "@profile"
+    let profile: Profile = empty
 
-  function listen() {
-    References.messageBus.on(Messages.Channels.PROFILE, (command, profile) => {
-      switch (command) {
-        case Messages.Commands.Profile.READ:
-          if (profile) return
-          push()
-          break
-      }
-    })
-  }
-
-  function push() {
-    let profile: Profile = {
-      home: "Clan [vL]",
-      init6: true,
-      password: "",
-      server: "ash.wserv.org",
-      username: "WarChat-Mobile"
+    export function initialize() {
+        load().then(() => {
+            listen()
+            push()
+        })
     }
 
-    References.messageBus.send(
-      Messages.Channels.PROFILE,
-      Messages.Commands.Profile.READ,
-      profile
-    )
-  }
+    async function load() {
+        try {
+            console.log("load")
+            const value = await AsyncStorage.getItem(key)
+            console.log(value)
+            if (value !== null) {
+                profile = JSON.parse(value) as Profile
+            } else {
+                return
+            }
+        } catch (err) { console.log(err) }
+    }
+
+    async function save() {
+        try {
+            console.log("save")
+            let data = JSON.stringify(profile)
+            await AsyncStorage.setItem(key, data)
+        } catch (err) { console.log(err) }
+    }
+
+    function push() {
+        References.messageBus.send(
+            Messages.Channels.PROFILE,
+            Messages.Commands.Profile.READ,
+            profile
+        )
+    }
+
+    function listen() {
+        References.messageBus.on(Messages.Channels.PROFILE, async (command, data) => {
+            switch (command) {
+                case Messages.Commands.Profile.READ:
+                    if (data) return
+                    push()
+                    break
+                case Messages.Commands.Profile.SAVE:
+                    profile = data as Profile
+                    await save()
+                    break
+            }
+        })
+    }
 }

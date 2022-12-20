@@ -3,8 +3,19 @@ import { Appbar } from "react-native-paper";
 import { References } from "@knightsofglory/warlibrary/lib/References";
 import { Messages } from "@knightsofglory/warlibrary/lib/common/Messages";
 import { Image, Text } from "react-native";
+import { useEffect, useState } from "react";
+import { ChatHelper } from "../utilities/ChatHelper";
 
 export default function Bar() {
+
+  const [connected, setConnected] = useState(false)
+
+  useEffect(() => {
+    References.connectionManager.subscribe(
+      "connected",
+      (isConnected: boolean) => setConnected(isConnected)
+    )
+  }, [])
 
   const title = (
     <>
@@ -14,11 +25,19 @@ export default function Bar() {
   )
 
   return (
-    <Appbar.Header>
-      <Appbar.Action icon="menu" onPress={() => {}} />
-      <Appbar.Content title={title} mode={"center-aligned"} />
-      <Appbar.Action icon="circle-outline" onPress={() => References.messageBus.send(Messages.Channels.SOCKET, Messages.Commands.Socket.CONNECT)} />
-      {/*<Appbar.Action icon="circle-slice-8" onPress={() => References.messageBus.send(Messages.Channels.SOCKET, Messages.Commands.Socket.CONNECT)} />*/}
+    <Appbar.Header style={{height: 36, backgroundColor: "#121212"}}>
+      <Appbar.Action icon="menu" color={"#ffffff"} onPress={() => {}} />
+      <Appbar.Content title={title} color={"#ffffff"} style={{alignItems: "center"}} />
+      <Appbar.Action icon={connected ? "circle-slice-8" : "circle-outline"}
+                     onPress={() => {
+                       let message = connected ? "Disconnecting..." : "Connecting..."
+                       References.chatManager.add(ChatHelper.makeBotChat(message))
+                       References.messageBus.send(
+                         Messages.Channels.SOCKET,
+                         connected ? References.connectionManager.disconnect() : References.connectionManager.connect()
+                       )
+                     }}
+                     color={"#ffffff"}/>
     </Appbar.Header>
   )
 }

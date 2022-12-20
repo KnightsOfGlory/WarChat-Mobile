@@ -25,11 +25,11 @@ export namespace AvatarHelper {
       !special;
 
     return useBoring ? (
-      <View style={{ marginLeft: 16 }}>
+      <View style={{ marginLeft: 16, marginRight: 0 }}>
         <Avatar name={user.name} variant="beam" colors={["#1976D2", "#414756", "#A5ABBD", "#C94669"]} size={32} />
       </View>
     ) : (
-      <View style={{ marginLeft: 16 }}>
+      <View style={{ marginLeft: 16, paddingRight: 0 }}>
         <Image source={icon} style={{ width: 32, height: 32 }} />
       </View>
     )

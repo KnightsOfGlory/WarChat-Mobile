@@ -50,14 +50,11 @@ export namespace ConnectionManager {
       switch (command) {
         case Messages.Commands.Socket.CONNECT:
           let profile = References.profileManager.getProfile()
-          console.log(profile)
           destroy()
           client = TcpSocket.createConnection({"host": profile.server, port: 6112}, () => {
             if (profile.init6) { // init6
-              console.log("init6")
               sendInit6Login(profile)
             } else {
-              console.log("classic")
               sendClassicLogin(profile)
             }
           });
