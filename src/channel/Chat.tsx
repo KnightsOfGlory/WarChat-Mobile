@@ -82,32 +82,21 @@ export default function() {
           if (group[0].user.client == undefined) return
 
           if (group[0].hasOwnProperty("channel")) {
-            return (
+
+              return (
               <View key={Math.random()} style={{height: 24, padding: 2, alignItems: "center", backgroundColor: "#424242"}}>
                 <Text>
                   <Text style={{fontWeight: "200"}}>
                     Channel:
                   </Text>
                   <Text style={{fontWeight: "500"}}>
-                    {" "}#Clan [vL]
+                    {" "}#{
+                      // @ts-ignore
+                      group[0].channel
+                    }
                   </Text>
                 </Text>
               </View>
-              // <Chip compact key={Math.random()} style={{
-              //   backgroundColor: "#424242",
-              //   height: 32,
-              //   alignItems: "center",
-              //   justifyContent: "center",
-              //   marginLeft: 8,
-              //   marginRight: 8,
-              // }}>
-              //   <Text style={{color: "#ffffff"}}>
-              //     {
-              //       // @ts-ignore
-              //       "Channel: " + group[0].channel
-              //     }
-              //   </Text>
-              // </Chip>
             )
           }
 
@@ -128,7 +117,8 @@ export default function() {
           )
 
           let color = "#90caf9"
-          if (group[0].user && References.profileManager.getProfile().username &&
+          if (group[0].user && References.profileManager.getProfile() &&
+              group[0].user && References.profileManager.getProfile().username &&
               group[0].user.name == References.profileManager.getProfile().username) {
             color = "#66bbba"
           }

@@ -38,7 +38,7 @@ export default function() {
       }} icon="send" />}
       style={{
         margin: 8,
-        marginBottom: Platform.OS === 'ios' ? 32 : 8,
+        marginBottom: 8,
         marginTop: 4,
         backgroundColor: "#121212",
         paddingVertical: 0,
