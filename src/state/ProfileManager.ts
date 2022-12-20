@@ -31,9 +31,7 @@ export namespace ProfileManager {
 
     async function load() {
         try {
-            console.log("load")
             const value = await AsyncStorage.getItem(key)
-            console.log(value)
             if (value !== null) {
                 profile = JSON.parse(value) as Profile
             } else {
@@ -44,7 +42,6 @@ export namespace ProfileManager {
 
     async function save() {
         try {
-            console.log("save")
             let data = JSON.stringify(profile)
             await AsyncStorage.setItem(key, data)
         } catch (err) { console.log(err) }
