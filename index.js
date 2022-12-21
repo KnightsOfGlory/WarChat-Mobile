@@ -10,6 +10,7 @@ import { ConnectionManager } from "./src/state/ConnectionManager";
 import { ProfileManager } from "./src/state/ProfileManager";
 import { ChatManager } from "./src/state/ChatManager";
 import { NavigationContainer } from "@react-navigation/native";
+import TrackPlayer from 'react-native-track-player';
 
 const theme = {
   ...MD3DarkTheme,
@@ -26,6 +27,9 @@ export default function Main() {
   ConnectionManager.initialize();
   ChatManager.initialize();
 
+  TrackPlayer.registerPlaybackService(() => require('./service'));
+  TrackPlayer.setupPlayer().catch()
+
   return (
     <SafeAreaProvider>
       <PaperProvider theme={theme}>
@@ -38,3 +42,5 @@ export default function Main() {
 }
 
 AppRegistry.registerComponent(appName, () => Main);
+
+// background task workaround track player hack
