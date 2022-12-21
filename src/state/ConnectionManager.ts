@@ -53,6 +53,10 @@ export namespace ConnectionManager {
                     destroy();
                     client = TcpSocket.createConnection({ "host": profile.server, port: 6112 }, () => {
                         if (connected) return
+
+                        client.setKeepAlive(true, 0)
+                        client.setNoDelay(true)
+
                         if (profile.init6) { // init6
                             sendInit6Login(profile);
                         } else {

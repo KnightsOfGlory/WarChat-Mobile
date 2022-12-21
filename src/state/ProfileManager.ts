@@ -29,6 +29,10 @@ export namespace ProfileManager {
         })
     }
 
+    export function getProfile() {
+        return { ...empty, ...profile }
+    }
+
     async function load() {
         try {
             const value = await AsyncStorage.getItem(key)
